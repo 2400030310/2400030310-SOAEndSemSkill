@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: bank-api-gateway
+  cloud:
+    gateway:
+      routes:
+        # Public:   /accounts/**
+        # Internal: /internal/accounts/**
+        - id: account-service-rewrite
+          uri: http://localhost:8081
+          predicates:
+            - Path=/accounts/**
+          filters:
+            - RewritePath=/accounts(?<segment>/?.*), /internal/accounts$\{segment}
+
+        # Alternative using StripPrefix + PrefixPath (equivalent result; enable instead of the route above):
+        # - id: account-service-strip
+        #   uri: http://localhost:8081
+        #   predicates:
+        #     - Path=/accounts/**
+        #   filters:
+        #     - StripPrefix=1              # /accounts/1001 -> /1001
+        #     - PrefixPath=/internal/accounts   # /1001 -> /internal/accounts/1001
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG

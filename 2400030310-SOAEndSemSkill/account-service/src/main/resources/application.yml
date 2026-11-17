@@ -1,0 +1,6 @@
+server:
+  port: 8081
+  address: 127.0.0.1   # isolated: reachable only from the local machine, not directly by clients
+spring:
+  application:
+    name: account-service
